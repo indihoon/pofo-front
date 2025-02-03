@@ -1,0 +1,72 @@
+.sidebar {
+  width: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid #191d20;
+}
+.icon {
+  width: 42px;
+  height: 42px;
+  padding: 8px;
+}
+.sidebar_top button,
+.sidebar_bottom button {
+  width: 100%;
+  display: block;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+.sidebar_top button:hover,
+.sidebar_bottom button:hover {
+  background-color: var(--sidebar-hover-bg);
+}
+.sidebar_top button:hover .icon,
+.sidebar_bottom button:hover .icon {
+  fill: rgb(225, 228, 232);
+}
+.sidebar_top button.active,
+.sidebar_bottom button.active {
+  border-left: 2px solid var(--accent-color);
+  background-color: var(--sidebar-hover-bg);
+}
+
+.sidebar {
+  width: 220px; /* ✅ 사이드바 너비 조정 */
+  background: #f9f9f9;
+  padding: 15px;
+  height: 100vh;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar_top,
+.sidebar_bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* ✅ 각 메뉴 간 간격 조정 */
+}
+
+.sidebar_item {
+  background: none;
+  border: none;
+  padding: 12px 15px; /* ✅ 여백 추가 */
+  text-align: left;
+  font-size: 16px; /* ✅ 글자 크기 키우기 */
+  cursor: pointer;
+  color: #333;
+  font-weight: 500; /* ✅ 글씨 두께 조정 */
+  transition: background 0.3s, color 0.3s;
+  border-radius: 6px; /* ✅ 모서리 둥글게 */
+}
+
+.sidebar_item:hover {
+  background: #e5e5e5; /* ✅ 마우스 호버 시 배경색 */
+}
+
+.active {
+  font-weight: bold;
+  color: #007bff;
+  background: #e0e0e0;
+}
