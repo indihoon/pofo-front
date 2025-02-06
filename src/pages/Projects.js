@@ -1,20 +1,58 @@
 import Switch from "react-switch";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import style from "../styles/Projects.module.css";
 
-const Projects = () => {
-  const [checked, setChecked] = useState(true); // 프로젝트 정보 표시 여부
+const Projects = ({ editingProject, onClose }) => {
+  const [checked, setChecked] = useState(true);
+  const [projectName, setProjectName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [descript, setDescript] = useState("");
+  const [reposit, setReposit] = useState("");
+
   const [techStack, setTechStack] = useState("");
   const [techList, setTechList] = useState([]);
   const [requirementInput, setRequirementInput] = useState("");
   const [requirements, setRequirements] = useState([]);
-  const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (editingProject) {
+      setProjectName(editingProject.projectName || "");
+      setStartDate(editingProject.startDate || "");
+      setEndDate(editingProject.endDate || "");
+      setDescript(editingProject.descript || "");
+      setReposit(editingProject.reposit || "");
+      setTechList(editingProject.techList || []);
+      setRequirements(editingProject.requirements || []);
+      setIsEditing(true);
+    } else {
+      const saveProjectName = localStorage.getItem("p_name");
+      const saveStartDate = localStorage.getItem("s_date");
+      const saveEndDate = localStorage.getItem("e_date");
+      const saveDescript = localStorage.getItem("p_desc");
+      const saveRequirements = localStorage.getItem("p_req");
+      const saveTechList = localStorage.getItem("p_tech");
+      const saveReposit = localStorage.getItem("p_repo");
+
+      if (saveProjectName) setProjectName(saveProjectName);
+      if (saveStartDate) setStartDate(saveStartDate);
+      if (saveEndDate) setEndDate(saveEndDate);
+      if (saveDescript) setDescript(saveDescript);
+      if (saveReposit) setReposit(saveReposit);
+
+      // JSON.parse()를 사용하여 배열 데이터 복구
+      if (saveRequirements) setRequirements(JSON.parse(saveRequirements));
+      if (saveTechList) setTechList(JSON.parse(saveTechList));
+    }
+  }, [editingProject]);
 
   // 기술 스택 추가 (Enter 키 입력 시)
   const handleTechStackKeyPress = (event) => {
     if (event.key === "Enter" && techStack.trim() !== "") {
-      setTechList([...techList, techStack.trim()]);
+      const updatedTechList = [...techList, techStack.trim()];
+      setTechList(updatedTechList);
+      localStorage.setItem("p_tech", JSON.stringify(updatedTechList));
       setTechStack("");
       event.preventDefault();
     }
@@ -23,7 +61,9 @@ const Projects = () => {
   // 요구 사항 추가 (Enter 키 입력 시)
   const handleRequirementKeyPress = (event) => {
     if (event.key === "Enter" && requirementInput.trim() !== "") {
-      setRequirements([...requirements, requirementInput.trim()]);
+      const updatedRequirements = [...requirements, requirementInput.trim()];
+      setRequirements(updatedRequirements);
+      localStorage.setItem("p_req", JSON.stringify(updatedRequirements));
       setRequirementInput("");
       event.preventDefault();
     }
@@ -31,13 +71,43 @@ const Projects = () => {
 
   // 저장 버튼 클릭 시
   const handleSave = () => {
-    alert("프로젝트가 저장되었습니다!");
+    alert(
+      editingProject
+        ? "프로젝트가 수정되었습니다!"
+        : "프로젝트가 저장되었습니다!"
+    );
+
+    const newProject = {
+      id: editingProject ? editingProject.id : Date.now(),
+      projectName,
+      startDate,
+      endDate,
+      descript,
+      reposit,
+      techList,
+      requirements,
+    };
+
+    const storedProjects = localStorage.getItem("projects_list");
+    let projectsArray = storedProjects ? JSON.parse(storedProjects) : [];
+
+    if (editingProject) {
+      // 기존 프로젝트 수정
+      projectsArray = projectsArray.map((proj) =>
+        proj.id === editingProject.id ? newProject : proj
+      );
+    } else {
+      // 새로운 프로젝트 추가
+      projectsArray.push(newProject);
+    }
+
+    localStorage.setItem("projects_list", JSON.stringify(projectsArray));
     setIsEditing(false);
+    onClose();
   };
 
   return (
     <div className={style.project_container}>
-      {/* 헤더 영역 (프로젝트 제목 + Switch 버튼) */}
       <div className={style.header}>
         <h1>프로젝트 페이지</h1>
         <Switch
@@ -54,10 +124,8 @@ const Projects = () => {
         />
       </div>
 
-      {/* 프로젝트 정보 (Switch OFF일 때 숨김) */}
       {checked ? (
         <div className={style.project_form}>
-          {/* 프로젝트명 입력 */}
           <div className={style.form_group}>
             <label>프로젝트 명</label>
             <input
@@ -66,10 +134,11 @@ const Projects = () => {
               type="text"
               name="projectName"
               disabled={!isEditing}
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
             />
           </div>
 
-          {/* 기간 입력 필드 */}
           <div className={style.form_group}>
             <label>기간</label>
             <div className={style.date_range}>
@@ -78,6 +147,8 @@ const Projects = () => {
                 maxLength="10"
                 type="text"
                 name="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 disabled={!isEditing}
               />
               <span className={style.date_separator}>~</span>
@@ -86,12 +157,13 @@ const Projects = () => {
                 maxLength="10"
                 type="text"
                 name="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
                 disabled={!isEditing}
               />
             </div>
           </div>
 
-          {/* 간단 설명 */}
           <div className={style.form_group}>
             <label>간단 설명</label>
             <textarea
@@ -99,29 +171,11 @@ const Projects = () => {
               maxLength="500"
               name="projectDescription"
               disabled={!isEditing}
+              value={descript}
+              onChange={(e) => setDescript(e.target.value)}
             ></textarea>
           </div>
 
-          {/* 요구 사항 입력 */}
-          <div className={style.form_group}>
-            <label>요구 사항</label>
-            <ul className={style.requirements_list}>
-              {requirements.map((req, index) => (
-                <li key={index}>{req}</li>
-              ))}
-            </ul>
-            {isEditing && (
-              <input
-                type="text"
-                placeholder="요구 사항을 입력하고 Enter를 누르세요"
-                value={requirementInput}
-                onChange={(e) => setRequirementInput(e.target.value)}
-                onKeyPress={handleRequirementKeyPress}
-              />
-            )}
-          </div>
-
-          {/* 기술 스택 입력 */}
           <div className={style.form_group}>
             <label>기술 스택</label>
             <div className={style.tech_stack}>
@@ -142,40 +196,21 @@ const Projects = () => {
             </div>
           </div>
 
-          {/* 오픈 링크 입력 */}
-          <div className={style.form_group}>
-            <label>오픈 링크</label>
-            <div className={style.link_input}>
-              <input
-                placeholder="http:// 또는 https://를 포함해 작성해주세요"
-                type="text"
-                name="repositoryLink"
-                disabled={!isEditing}
-              />
-              <span className={style.link_icon}>🔗</span>
-            </div>
-          </div>
-
-          {/* 저장 및 수정 버튼 */}
           <div className={style.button_group}>
             <button className={style.save_button} onClick={handleSave}>
-              저장
+              {editingProject ? "수정 완료" : "저장"}
             </button>
-            <button
-              className={style.edit_button}
-              onClick={() => setIsEditing(true)}
-            >
-              수정
-            </button>
+            {!isEditing && (
+              <button
+                className={style.edit_button}
+                onClick={() => setIsEditing(true)}
+              >
+                수정
+              </button>
+            )}
           </div>
         </div>
-      ) : (
-        <div className={style.plus_icon} onClick={() => setChecked(true)}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-          </svg>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };
