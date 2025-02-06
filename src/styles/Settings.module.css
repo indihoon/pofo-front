@@ -1,0 +1,92 @@
+/* Settings 페이지 전체 컨테이너 */
+.settings_container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 설정 페이지 제목 */
+.settings_container h1 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 프로젝트 추가 버튼 */
+.add_project_button {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.3s ease-in-out;
+}
+
+.add_project_button:hover {
+  background-color: #0056b3;
+}
+
+/* 프로젝트 리스트 스타일 */
+.project_list {
+  margin-top: 20px;
+}
+
+/* 프로젝트 카드 레이아웃 */
+.project_card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.project_card:hover {
+  transform: translateY(-3px);
+}
+
+/* 프로젝트 제목 */
+.project_card h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+/* 프로젝트 날짜 */
+.project_card .project_dates {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+/* 프로젝트 설명 */
+.project_card .project_desc {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* 수정 버튼 */
+.edit_button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: white;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.edit_button:hover {
+  background-color: #218838;
+}

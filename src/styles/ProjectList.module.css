@@ -1,0 +1,51 @@
+.project_list_container {
+  padding: 20px;
+}
+
+.project_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.project_card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+.project_card:hover {
+  transform: translateY(-5px);
+}
+
+.project_dates {
+  font-size: 14px;
+  color: gray;
+}
+
+.project_desc {
+  margin: 10px 0;
+}
+
+.tech_stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tech_tag {
+  background: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.repo_link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
